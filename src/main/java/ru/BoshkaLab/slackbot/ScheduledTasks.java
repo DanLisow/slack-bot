@@ -1,6 +1,5 @@
 package ru.BoshkaLab.slackbot;
 
-import org.hibernate.annotations.Proxy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

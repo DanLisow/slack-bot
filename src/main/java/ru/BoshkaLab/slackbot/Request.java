@@ -1,17 +1,25 @@
 package ru.BoshkaLab.slackbot;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class Request {
-    private static final String token = "xoxb-977456197875-1001188814789-3QK8425xhSVcselEKJGcoI0T";
+    private static final String token;
+
+    static {
+        Properties prop = new Properties();
+        try (InputStream input = Request.class.getClassLoader().getResourceAsStream("bot.properties")) {
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        token = prop.getProperty("token");
+    }
 
     enum RequestType {
         GET,
