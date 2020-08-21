@@ -6,4 +6,5 @@ import ru.BoshkaLab.entities.Employee;
 
 public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     Channel findByEmployee(Employee employee);
+    boolean existsByEmployee(Employee employee);
 }

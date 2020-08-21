@@ -81,15 +81,26 @@ public class ScheduledTasks {
         Date currentTime = new Date(System.currentTimeMillis());
         List<SendingTimetable> timetable = timetableRepository.findAllByPostedIsFalseAndTimeLessThanEqual(currentTime);
         for (var record : timetable) {
+            Employee employee = record.getEmployee();
+            List<SendingTimetable> postedMessages = timetableRepository.findAllByPostedIsTrueAndEmployee(employee,
+                    Sort.by(Sort.Direction.ASC, "time"));
+            if (postedMessages.size() > 0) {
+                SendingTimetable lastPostedMessage = postedMessages.get(postedMessages.size() - 1);
+                if (!answerRepository.existsByEmployeeAndQuestion(employee, lastPostedMessage.getQuestion()))
+                    continue;
+            }
+
             String message = record.getQuestion().getText();
             String slackId = record.getEmployee().getSlackId();
 
             String answerStr = Request.postMessage(message, slackId);
 
-            JSONObject answer = new JSONObject(answerStr);
-            String channel = answer.getString("channel");
-            Channel newChannel = new Channel(channel, record.getEmployee());
-            channelRepository.saveAndFlush(newChannel);
+            if (!channelRepository.existsByEmployee(employee)) {
+                JSONObject answer = new JSONObject(answerStr);
+                String channel = answer.getString("channel");
+                Channel newChannel = new Channel(channel, record.getEmployee());
+                channelRepository.saveAndFlush(newChannel);
+            }
 
             record.setPosted(true);
             timetableRepository.saveAndFlush(record);
@@ -119,7 +130,6 @@ public class ScheduledTasks {
             Answer answer = new Answer(answerText, currentTime, employee, record.getQuestion());
             answerRepository.saveAndFlush(answer);
         }
-        System.out.println("It's working");
     }
 
     private String parseAnswer(String answer, String question) {
