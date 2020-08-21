@@ -4,18 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.BoshkaLab.entities.Answer;
 import ru.BoshkaLab.entities.Employee;
-import ru.BoshkaLab.entities.Question;
 import ru.BoshkaLab.repositories.AnswerRepository;
 import ru.BoshkaLab.repositories.EmployeeRepository;
 import ru.BoshkaLab.repositories.QuestionRepository;
-import ru.BoshkaLab.services.EmployeeServiceImpl;
+import ru.BoshkaLab.services.EmployeeService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -24,7 +20,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
-    private EmployeeServiceImpl employeeService;
+    private EmployeeService employeeService;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired

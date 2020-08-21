@@ -14,7 +14,7 @@ import ru.BoshkaLab.repositories.AnswerRepository;
 import ru.BoshkaLab.repositories.ChannelRepository;
 import ru.BoshkaLab.repositories.EmployeeRepository;
 import ru.BoshkaLab.repositories.SendingTimetableRepository;
-import ru.BoshkaLab.services.EmployeeServiceImpl;
+import ru.BoshkaLab.services.EmployeeService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -31,7 +31,7 @@ public class ScheduledTasks {
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
-    EmployeeServiceImpl employeeService;
+    EmployeeService employeeService;
     @Autowired
     ChannelRepository channelRepository;
     @Autowired

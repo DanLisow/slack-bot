@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.BoshkaLab.entities.Question;
 import ru.BoshkaLab.repositories.QuestionRepository;
-import ru.BoshkaLab.services.QuestionServiceImpl;
+import ru.BoshkaLab.services.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ public class QuestionController {
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
-    private QuestionServiceImpl questionService;
+    private QuestionService questionService;
 
 //    @GetMapping("all")
 //    public Iterable<Question> getAll() {
