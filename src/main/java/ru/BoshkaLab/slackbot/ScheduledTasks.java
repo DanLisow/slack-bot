@@ -17,10 +17,8 @@ import ru.BoshkaLab.repositories.SendingTimetableRepository;
 import ru.BoshkaLab.services.EmployeeService;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.InputStream;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +34,18 @@ public class ScheduledTasks {
     ChannelRepository channelRepository;
     @Autowired
     AnswerRepository answerRepository;
+
+    private static final String domain;
+
+    static {
+        Properties prop = new Properties();
+        try (InputStream input = Request.class.getClassLoader().getResourceAsStream("bot.properties")) {
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        domain = prop.getProperty("email_domain");
+    }
 
     @Scheduled(fixedRate = 10000)
     public void updateUserList() throws IOException {
@@ -70,7 +80,10 @@ public class ScheduledTasks {
                 surname = fullname[1];
             }
 
+            // Check user's domain
             String email = profile.getString("email");
+            if (!email.endsWith(domain))
+                continue;
 
             employeeService.add(slackId, name, surname);
         }
@@ -111,7 +124,8 @@ public class ScheduledTasks {
     public void getAnswers() throws IOException {
         List<Employee> employeeList = employeeRepository.findAllByTimeOfEnding(null);
         for (Employee employee : employeeList) {
-            List<SendingTimetable> records = timetableRepository.findAllByPostedIsTrueAndEmployee(employee, Sort.by(Sort.Direction.ASC, "time"));
+            List<SendingTimetable> records = timetableRepository.findAllByPostedIsTrueAndEmployee(employee,
+                    Sort.by(Sort.Direction.ASC, "time"));
             if (records.size() == 0)
                 continue;
 
