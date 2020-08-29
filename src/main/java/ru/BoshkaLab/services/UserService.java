@@ -12,11 +12,14 @@ public class UserService{
     @Autowired
     private UserRepository userRepository;
 
-    public void add(String login, String password, String email,
+    public boolean add(String login, String password, String email,
                     String name, String surname, UserType userType) {
+        if (userRepository.existsByLogin(login) || userRepository.existsByEmail(email))
+            return false;
         User newUser = new User(login, new BCryptPasswordEncoder().encode(password),
                                 email, name, surname, userType);
         userRepository.saveAndFlush(newUser);
+        return true;
     }
 
     public boolean auth(String loginOrEmail, String password) {
