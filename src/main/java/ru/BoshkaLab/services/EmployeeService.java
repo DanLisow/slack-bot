@@ -34,6 +34,9 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public void add(String slackId, String name, String surname) {
+        if (employeeRepository.existsBySlackId(slackId))
+            return;
+
         Date currentTime = new Date(System.currentTimeMillis());
         Employee employee = new Employee(slackId, name, surname, currentTime, null);
         employeeRepository.saveAndFlush(employee);
