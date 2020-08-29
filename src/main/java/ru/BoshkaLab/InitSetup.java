@@ -8,6 +8,7 @@ import ru.BoshkaLab.entities.User;
 import ru.BoshkaLab.entities.UserType;
 import ru.BoshkaLab.repositories.UserRepository;
 import ru.BoshkaLab.repositories.UserTypeRepository;
+import ru.BoshkaLab.services.UserService;
 
 @Component
 public class InitSetup {
@@ -15,6 +16,8 @@ public class InitSetup {
     private UserTypeRepository userTypeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @EventListener(ContextRefreshedEvent.class)
     public void initialSetup() {
@@ -30,9 +33,8 @@ public class InitSetup {
 
         if (!userRepository.existsByLogin("admin")) {
             UserType userType = userTypeRepository.findByName("ADMIN");
-            User user = new User("admin", "admin", "admin@pochta.net",
-                                 "Anton", "Lisov", userType);
-            userRepository.saveAndFlush(user);
+            userService.add("admin", "admin", "admin@pochta.net",
+                            "Anton", "Lisov", userType);
         }
     }
 }
