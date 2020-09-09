@@ -1,21 +1,29 @@
 package ru.BoshkaLab.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.BoshkaLab.entities.User;
 import ru.BoshkaLab.entities.UserType;
+import ru.BoshkaLab.repositories.EmployeeRepository;
 import ru.BoshkaLab.repositories.UserRepository;
 import ru.BoshkaLab.repositories.UserTypeRepository;
+import ru.BoshkaLab.services.UserService;
 
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("user")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserTypeRepository userTypeRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @GetMapping("/all")
     public Iterable<User> getAll() {
@@ -68,5 +76,17 @@ public class UserController {
         String email = auth.get("email");
         String password = auth.get("password");
         return userRepository.findByEmailAndPassword(email, password) != null ? "Ok" : "Fail";
+    }
+
+    @GetMapping("/login")
+    public String login(@RequestParam("login") String login,
+                        @RequestParam("password") String password,
+                        ModelMap modelMap) {
+        if (userService.auth(login, password)) {
+            modelMap.put("employee", employeeRepository.findAll());
+            return "redirect:/employee";
+        }
+        else
+            return "redirect:/";
     }
 }

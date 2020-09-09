@@ -43,15 +43,16 @@
     </div>
     <div class="enter-auth">
         <span class="enter">Вход в систему</span>
-        <form action="/employee" method="get">
+        <form action="user/login" method="get">
             <div class="login">
                 <span>Логин</span>
-                <input type="text" placeholder="Введите логин" required>
+                <input type="text" name="login" placeholder="Введите логин" required>
             </div>
             <div class="password">
                 <span>Пароль</span>
-                <input type="password" placeholder="Введите пароль" required>
+                <input type="password" name="password" placeholder="Введите пароль" required>
             </div>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <button type="submit">
                 <span>Войти в систему</span>
                 <img src="${pageContext.request.contextPath}/resources/img/arrow-white.svg" alt="">
